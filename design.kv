@@ -1,0 +1,302 @@
+ScreenManager: #sm_main
+  id: sm_main
+  MDScreen: #app_screens
+    name:"mainScreen"
+    id: app_screens
+    BoxLayout: #main screen
+      orientation: 'vertical'
+      #Comment MDToolbar section to remove toolbar and still maintain full fucntionality
+      MDTopAppBar: #replaced MDToolbar 02/05/25 works
+        title: "SV Makai"
+        size_hint: (1, 0.1)
+        elevation: 10
+        left_action_items: [['menu', lambda x: nav_drawer.set_state("open")]]
+      #End MDToolbar section
+      ScreenManager: #sm_sub
+        id: sm_sub
+        MDScreen: #home
+          name:"Home"
+          on_enter: app.homeOpen()
+          BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+              size_hint:(None, None)
+              MDLabel:
+                text:"Home Screen"
+                size:(100, 100)
+                size_hint: (None, None)
+              MDRaisedButton:
+                text:"Add Task"
+                size:(100,100)
+                size_hint: (None, None)
+                on_release:
+                  sm_sub.current="add_task"
+            BoxLayout:
+              size_hint:(1, None)
+              MDLabel:
+                text:"Preventative Maintenance"
+                size_hint:(0.5, None)
+              MDLabel:
+                text: "Tasks"
+                size_hint:(0.5, None)
+            BoxLayout:
+              MDScrollView:
+                MDList:
+                  id: homePmList
+                  cols: 3
+              MDScrollView:
+                MDList:
+                  id: homeTaskList
+                  cols: 2
+        MDScreen: #location
+          name:"location"
+          BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+              MDLabel:
+                size: (50, 50)
+                text:"Locations"
+              MDRaisedButton:
+                md_bg_color: "blue"
+                text: "Add Location"
+                on_release:
+                  sm_sub.current="add_loc"
+            MDScrollView:
+              MDList:
+                id: locList
+        
+        MDScreen: #equipment
+          name:"equipment"
+          BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+              MDLabel:
+                size: (50, 50)
+                text:"Equipment"
+              MDRaisedButton:
+                md_bg_color: "blue"
+                text: "Add Equipment"
+                on_release:
+                  sm_sub.current="add_equip"
+            MDScrollView:
+              MDList:
+                id: equipList
+        
+        MDScreen: #pm
+          name:"pm"
+          BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+              MDLabel:
+                size: (50, 50)
+                text:"Preventative Maintenance"
+              MDRaisedButton:
+                md_bg_color: "blue"
+                text: "Add PM"
+            MDScrollView:
+              MDList:
+                id: pmList
+                cols: 3
+        
+        MDScreen: #past
+          name:"past"
+          BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+              MDLabel:
+                size: (50, 50)
+                text:"Past Tasks"
+            MDScrollView:
+              MDList:
+                id: pastList
+                cols: 3
+
+        MDScreen: #add_loc
+          name:"add_loc"
+          GridLayout:
+            cols: 2
+            MDLabel:
+              text: "Location"
+            TextInput:
+              id: locName
+              write_tab: False
+              multiline: False
+            MDLabel:
+              text: "Description"
+            TextInput:
+              id: locDesc
+              write_tab: False
+              multiline: False
+            MDRaisedButton:
+              text: "Add Location"
+              on_release:
+                app.addLoc()
+            MDLabel:
+              id: locText
+              text: ""
+
+        MDScreen: #add_equip
+          name:"add_equip"
+          on_pre_enter: app.addEquipOpen()
+          GridLayout:
+            cols: 2
+            MDLabel:
+              text: "Equipment"
+            TextInput:
+              id: equipName
+              write_tab: False
+              multiline: False
+            MDLabel:
+              text: "Description"
+            TextInput:
+              id: equipDesc
+              write_tab: False
+              multiline: False
+            MDLabel:
+              text: "Location"
+            MDDropDownItem:
+              id: equipDropItem
+              text: 'Locations'
+              on_release: app.locMenu.open()
+            MDRaisedButton:
+              text: "Add Equipment"
+              on_release:
+                app.addEquip()
+            MDLabel:
+              id: equipText
+              text: ""
+
+        MDScreen: #add_task
+          name:"add_task"
+          GridLayout:
+            cols: 2
+            MDLabel:
+              text: "Task"
+            TextInput:
+              id: taskName
+              write_tab: False
+              multiline: False
+            MDLabel:
+              text: "Description"
+            TextInput:
+              id: taskDesc
+              write_tab: False
+              multiline: False
+            MDRaisedButton:
+              text: "Add Task"
+              on_release:
+                app.addTask()
+            MDLabel:
+              id: taskText
+              text: ""
+
+        MDScreen: #Task Details
+          name: "task_dets"
+          BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+              MDLabel:
+                text: "Task Name:"
+              MDLabel:
+                id: taskDetName
+                text: "task name"
+            BoxLayout:
+              MDLabel:
+                text: "Task Description:"
+              MDLabel:
+                id: taskDetDesc
+                text: "task Description"
+            BoxLayout:
+              MDLabel:
+                text: "Task Date:"
+              MDLabel:
+                id: taskDetDate
+                text: "task date"
+            BoxLayout:
+              MDLabel:
+                text: "Task Complete:"
+              MDLabel:
+                id: taskDetComp
+                text: "No"
+            MDRaisedButton:
+              id: markCompBtn
+              text: "Mark Complete"
+              on_release:
+                app.taskMarkComp()
+        MDScreen: #PM Details
+          name: "pm_dets"
+          BoxLayout:
+            orientation: 'vertical'
+            MDLabel:
+              text: "Details"
+            BoxLayout:
+              MDLabel:
+                text: "PM Name:"
+              MDLabel:
+                id: pmDetsName
+                text: 'name'
+            BoxLayout:
+              MDLabel:
+                text: "Equipment:"
+              MDLabel:
+                id: pmDetsEquip
+                text: 'equip'
+            BoxLayout:
+              MDLabel:
+                text: "Description:"
+              MDLabel:
+                id: pmDetsDesc
+                text: 'desc'
+            BoxLayout:
+              MDLabel:
+                text: "Steps:"
+              MDScrollView:
+                MDList:
+                  id: pmDetsStepList
+            BoxLayout:
+              MDLabel:
+                text: "Tools:"
+              MDScrollView:
+                MDList:
+                  id: pmDetsToolList
+
+    
+    MDNavigationDrawer:
+      id: nav_drawer
+      BoxLayout:
+        orientation: 'vertical'
+        
+        Button: #home
+          text:"Home"
+          on_release:
+            sm_sub.current='Home'
+            nav_drawer.set_state("closed")
+            app.homeOpen()
+        
+        Button: #location
+          text:"Location"
+          on_release:
+            sm_sub.current='location'
+            nav_drawer.set_state("closed")
+            app.locOpen()
+        
+        Button: #equipment
+          text:"Equipment"
+          on_release:
+            sm_sub.current='equipment'
+            nav_drawer.set_state("closed")
+            app.equipOpen()
+        
+        Button: #pm
+          text:"Preventative Maintenance"
+          on_release:
+            sm_sub.current='pm'
+            nav_drawer.set_state("closed")
+            app.pmOpen()
+        
+        Button: #past task
+          text:"Past Tasks"
+          on_release:
+            sm_sub.current='past'
+            nav_drawer.set_state("closed")
+            app.pastOpen()
